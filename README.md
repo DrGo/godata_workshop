@@ -46,7 +46,7 @@ Essential concepts
 Index of examples
 -----------------
 
-* (nuclear_count_russia.go)
+* [nuclear_count_russia.go](nuclear_count_russia.go)
 
 * nuclear_make_map.go
 
