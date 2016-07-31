@@ -1,13 +1,14 @@
 Go for data processing
 ======================
 
-This site contains scripts used in a [cscar.research.umich.edu](CSCAR)
-workshop on Go for data processing.
+This site contains scripts used in a
+[CSCAR](http://cscar.research.umich.edu) workshop on using
+[Go](http://golang.org) for data processing.
 
 Go resources
 ------------
 
-* [Go project web site](golang.org)
+* [Go project web site](http://golang.org)
 
 * [Effective Go](https://golang.org/doc/effective_go.html)
 
@@ -28,7 +29,7 @@ Essential concepts
 
 * Native Go data structures: slices, maps, structs
 
-* Data input/output
+* Data input and output
 
     * Working with text files
 
@@ -36,14 +37,16 @@ Essential concepts
 
     * Working with raw binary data
 
-    * Binary data containers Apache Arrow and [Feather](https://github.com/wesm/feather/issues)
+    * Binary data containers [Apache
+      Arrow](https://github.com/apache/arrow) and
+      [Feather](https://github.com/wesm/feather/issues)
 
 * Basic concurrency
 
 Index of examples
 -----------------
 
-* [[nuclear_count_russia.go]]
+* (nuclear_count_russia.go)
 
 * nuclear_make_map.go
 
