@@ -39,16 +39,24 @@ Essential concepts
 
     * Binary data containers [Apache
       Arrow](https://github.com/apache/arrow) and
-      [Feather](https://github.com/wesm/feather/issues)
+      [Feather](https://github.com/wesm/feather)
 
 * Basic concurrency
+
 
 Index of examples
 -----------------
 
-* [nuclear_count_russia.go](nuclear_count_russia.go)
+* [nuclear_count_russia.go](nuclear_count_russia.go) (file reading)
 
-* nuclear_make_map.go
+* [nuclear_make_map.go](nuclear_make_map.go) (file reading, data structures)
+
+* [nuclear_grep.go](nuclear_grep.go) (file reading, flags)
+
+* [gcos_monthly.go](gcos_monthly.go)
+
+* [gcos_monthly_concurrent.go](gcos_monthly_concurrent.go)
+
 
 Running the workshop scripts
 ----------------------------
