@@ -1,5 +1,16 @@
 package main
 
+// This script is a small command line utility for performing simple
+// grep-like selections on a text file.
+//
+// Example usage:
+//    ./nuclear_grep --country=China --units=7
+//
+// The above invocation of the script will print to stdout all the
+// records for plants in China that have exactly 7 reactors.
+//
+// See nuclear_count_russia.go for more information about the data.
+
 import (
 	"encoding/csv"
 	"flag"
@@ -9,14 +20,6 @@ import (
 	"strconv"
 	"strings"
 )
-
-// This script is a small command line utility for performing simple
-// grep-like selections on a text file.
-//
-// Example usage:
-//    ./nuclear_grep --country=China --units=7
-//
-// See nuclear_count_russia.go for more information about the data.
 
 var (
 	// A country name
@@ -29,9 +32,9 @@ var (
 	num_units int
 )
 
-// read_file reads a CSV file and prints to stdout the lines that
+// readFile reads a CSV file and prints to stdout the lines that
 // match the selection criteria.
-func read_file() {
+func readFile() {
 
 	// Open the file, panic on error, don't forget to close
 	fname := "in_service.csv"
@@ -92,5 +95,5 @@ func main() {
 	flag.Parse()
 
 	// Scan the file
-	read_file()
+	readFile()
 }
