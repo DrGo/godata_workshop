@@ -39,7 +39,8 @@ Essential concepts
 
     * Binary data containers [Apache
       Arrow](https://github.com/apache/arrow) and
-      [Feather](https://github.com/wesm/feather)
+      [Feather](https://github.com/wesm/feather) -- won't be ready for
+      August 2016 offering
 
 * Basic concurrency
 
@@ -47,40 +48,14 @@ Essential concepts
 Index of examples
 -----------------
 
-* [nuclear_count_russia.go](nuclear_count_russia.go) (file reading)
+* [nuclear_count_russia.go](nuclear_count_russia.go) (basic file reading)
 
-* [nuclear_make_map.go](nuclear_make_map.go) (file reading, data structures)
+* [nuclear_make_map.go](nuclear_make_map.go) (csv reading, making and inverting maps)
 
-* [nuclear_grep.go](nuclear_grep.go) (file reading, flags)
+* [nuclear_grep.go](nuclear_grep.go) (flags)
+
+* [nuclear_json.go](nuclear_json.go) (json and gob serialization)
 
 * [gcos_monthly.go](gcos_monthly.go)
 
 * [gcos_monthly_concurrent.go](gcos_monthly_concurrent.go)
-
-
-Running the workshop scripts
-----------------------------
-
-Note that most of the scripts have global variables that you must edit
-to point to directories in your file system where you have permission
-to read and write files.  In addition, for most scripts some data must
-be downloaded, and a bit of pre-processing is necessary.
-
-* `data_path`: the data are read from here, see the comments at the
-  top of each script to see how to obtain and pre-process any data
-  needed by the script.
-
-* `out_path`: the results are written here, this can usually be any
-  directory where you have write permission
-
-### Data sets
-
-#### GCOS surface network climate data
-
-```
-wget ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd_gsn.tar.gz
-gunzip ghcnd_gsn.tar.gz
-tar -xvf ghcnd_gsn.tar
-cd ghcnd_gsn
-gzip *
-```
