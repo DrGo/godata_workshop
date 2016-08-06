@@ -6,14 +6,11 @@ package main
 // This is the concurrent version of the script, see gcos_monthly.go
 // for the non-concurrent version.
 //
-// The data files are available from:
-// ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd_gsn.tar.gz
+// See gcos_monthly.go for informaiton about obtaining and preparing
+// the input data.
 //
-// Prior to running this script, the tarball should be fully extracted
-// and the data files individually gzipped.
-//
-// The data file format is available here:
-// ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt
+// The data_path and out_path variables below must be set to
+// appropriate local directory paths.
 
 import (
 	"bufio"
@@ -48,21 +45,21 @@ var (
 
 // The data in one line of the input file
 type lrec_t struct {
-	Id      string
-	Year    int
-	Month   int
-	Element string
-	Values  []float64
-	Valid   []bool
+	Id      string    // The station id
+	Year    int       // The year of the data point
+	Month   int       // The month of the data point (1..12)
+	Element string    // The data value type (TMAX or TMIN)
+	Values  []float64 // The daily values
+	IsValid []bool    // Validity flags for the data
 }
 
 // The summary record for one month
 type mrec_t struct {
-	Id     string
-	Year   int
-	Month  int
-	Mean   float64
-	Nvalid int
+	Id     string  // The station id
+	Year   int     // The year of the data point
+	Month  int     // The month of the data point (1..12)
+	Mean   float64 // The mean value
+	Nvalid int     // The number of valid values in the mean
 }
 
 // Parse one line of a raw file and put the results into a structure.
@@ -90,7 +87,7 @@ func parse(line string) *lrec_t {
 		// First check the quality flag
 		if line[26] != ' ' {
 			rec.Values = append(rec.Values, 0)
-			rec.Valid = append(rec.Valid, false)
+			rec.IsValid = append(rec.IsValid, false)
 			continue
 		}
 
@@ -100,7 +97,7 @@ func parse(line string) *lrec_t {
 			panic(err)
 		}
 		rec.Values = append(rec.Values, v)
-		rec.Valid = append(rec.Valid, true)
+		rec.IsValid = append(rec.IsValid, true)
 	}
 
 	return &rec
@@ -113,7 +110,7 @@ func summarize(lrec *lrec_t) *mrec_t {
 	sum := 0.0
 
 	for j, x := range lrec.Values {
-		if lrec.Valid[j] && x != -9999 {
+		if lrec.IsValid[j] && x != -9999 {
 			sum += x
 			nvalid++
 		}
@@ -132,7 +129,7 @@ func summarize(lrec *lrec_t) *mrec_t {
 }
 
 // All processing for one data file (for one station)
-func process_file(file os.FileInfo) {
+func processFile(file os.FileInfo) {
 
 	// Signal that this file has been fully processed
 	defer func() { wg.Done() }()
@@ -199,7 +196,7 @@ func main() {
 	// Process each file
 	for _, file := range files {
 		wg.Add(1)
-		go process_file(file)
+		go processFile(file)
 	}
 
 	// Wait until all files are done, then close the channel to
