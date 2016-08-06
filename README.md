@@ -54,8 +54,10 @@ Index of examples
 
 * [nuclear_grep.go](nuclear_grep.go) (flags)
 
-* [nuclear_json.go](nuclear_json.go) (json and gob serialization)
+* [nuclear_json.go](nuclear_json.go) (json and gob serialization, structs)
 
 * [gcos_monthly.go](gcos_monthly.go)
 
 * [gcos_monthly_concurrent.go](gcos_monthly_concurrent.go)
+
+* [gcos_columnize.go](gcos_columnize.go) (concurrency, serialization, binary data, file system manipulations)

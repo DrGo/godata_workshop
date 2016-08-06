@@ -58,6 +58,7 @@ import (
 	"github.com/kshedden/ziparray"
 )
 
+// Configurable values
 var (
 	// Location of the data in the local file system
 	data_path = "/nfs/kshedden/GHCN/ghcnd_gsn"
@@ -68,28 +69,31 @@ var (
 	// The temperature type to process, should be either "TMAX" or
 	// "TMIN"
 	eltype = "TMAX"
+)
 
+var (
 	// A gob encoder for the data in each year
 	year_gob map[int]*gob.Encoder
 
-	// The backing data structure for each gob encoder.  We can't
-	// connect to the files directly because we can't have
-	// enough many open files.
+	// The backing data buffer for each gob encoder.  We can't
+	// store the files directly because of limits on the number of
+	// simultaneously open files.
 	year_buf map[int]*bytes.Buffer
 
-	// We don't know up-front which years appear in the file, so
-	// we create data structures as we encounter each year for the
-	// first time.  seen tells us whether we are seeing a year for
-	// the first time and therefore need to set things up.
+	// We don't know up-front which years are in the data set, so
+	// we create data structures as we first encounter each year.
+	// seen tells us whether we are seeing a year for the first
+	// time and therefore need to set things up.
 	seen map[int]bool
 
+	// Used to manage concurrency
 	wg sync.WaitGroup
 
-	// Number of values to write to a channel before flushing to disk
+	// Number of bytes to save in-memory before flushing to disk
 	buf_size int = 1e7
 )
 
-// One data point
+// One data value (either maximum or minimum daily temperature)
 type rec_t struct {
 	Id    string  // The station id
 	Year  int     // The year of the data point
@@ -101,6 +105,8 @@ type rec_t struct {
 // We will need to sort slices of rec_t values
 type recslice []rec_t
 
+// Needed for sorting.  Less implies sorting by station first, then
+// by date.
 func (a recslice) Len() int {
 	return len(a)
 }
@@ -131,6 +137,9 @@ func (a recslice) Less(i, j int) bool {
 	return false
 }
 
+// setupYear creates data structures to handle all the data we
+// encounter for one year.  It also truncates the file that will be
+// used for temporary data storage for the year's data.
 func setupYear(year int) {
 	year_buf[year] = new(bytes.Buffer)
 	year_gob[year] = gob.NewEncoder(year_buf[year])
@@ -152,12 +161,16 @@ func setupYear(year int) {
 	seen[year] = true
 }
 
+// parse processes one row of data from a raw input file (i.e. data
+// for all days in one month for one station).
 func parse(line string) {
 
 	var err error
 
+	// The station id
 	id := line[0:11]
 
+	// The year for the data value
 	year, err := strconv.Atoi(line[11:15])
 	if err != nil {
 		panic(err)
@@ -168,6 +181,7 @@ func parse(line string) {
 		setupYear(year)
 	}
 
+	// The month for the data value
 	month, err := strconv.Atoi(line[15:17])
 	if err != nil {
 		panic(err)
@@ -182,6 +196,7 @@ func parse(line string) {
 			continue
 		}
 
+		// The data value (maximum or minimum temperature)
 		sval := strings.TrimLeft(line[pos:pos+5], " ")
 		v, err := strconv.ParseFloat(sval, 64)
 		if err != nil {
@@ -207,7 +222,7 @@ func parse(line string) {
 	}
 }
 
-// All processing for one data file (for one station)
+// processFile handles all processing for one data file (for one station).
 func processFile(file os.FileInfo) {
 
 	fmt.Printf("Reading %v\n", file.Name())
@@ -234,6 +249,8 @@ func processFile(file os.FileInfo) {
 
 		line := scanner.Text()
 
+		// Check the element type first so we can skip the
+		// line if not being used.
 		eltype_val := line[17:21]
 		if eltype_val != eltype {
 			continue
@@ -248,11 +265,12 @@ func tfileName(year int) string {
 	return path.Join(out_path, fmt.Sprintf("%d", year), "raw.bin")
 }
 
+// flush writes the data from one in-memory buffer to a file on disk.
 func flush(year int) {
 
 	fmt.Printf("Flushing %d\n", year)
 	fname := tfileName(year)
-	fid, err := os.OpenFile(fname, os.O_APPEND|os.O_WRONLY, 0600)
+	fid, err := os.OpenFile(fname, os.O_APPEND|os.O_WRONLY, 0700)
 	if err != nil {
 		panic(err)
 	}
@@ -265,6 +283,7 @@ func flush(year int) {
 	year_buf[year].Truncate(0)
 }
 
+// step1 processes the raw data into native go data structures.
 func step1() {
 
 	year_buf = make(map[int]*bytes.Buffer)
@@ -292,15 +311,20 @@ func step1() {
 		processFile(file)
 	}
 
+	// Write whatever is left to disk
 	for year, _ := range year_buf {
 		flush(year)
 	}
 }
 
+// doSortWrite takes the native go data structure for one year, sorts
+// by station then by date, and finally creates the final output
+// files.
 func doSortWrite(year int) {
 
 	defer func() { wg.Done() }()
 
+	// Read the sequence of rec_t values from disk into an array.
 	year_s := fmt.Sprintf("%d", year)
 	fn := path.Join(out_path, year_s, "raw.bin")
 	fid, err := os.Open(fn)
@@ -321,8 +345,10 @@ func doSortWrite(year int) {
 		x = append(x, z)
 	}
 
+	// Sort by station then by date
 	sort.Sort(recslice(x))
 
+	// Split the go struct into arrays for each field.
 	ids := make([]string, len(x))
 	values := make([]float64, len(x))
 	dates := make([]string, len(x))
@@ -343,12 +369,15 @@ func doSortWrite(year int) {
 	fname = path.Join(out_path, year_s, "dates.gz")
 	ziparray.WriteString(dates, fname)
 
+	// Remove the temporary data file.
 	err = os.Remove(tfileName(year))
 	if err != nil {
 		panic(err)
 	}
 }
 
+// recsort loops over the years and manages the process of sorting and
+// generating final output.
 func recsort() {
 
 	fmt.Printf("Sorting and writing output...\n")

@@ -44,8 +44,9 @@ func makeMap(fname string) {
 	// Assume the header can be read
 	header, _ := rdr.Read()
 
-	if header[1] != "# Units" {
-		panic("non-comforming files structure")
+	// Partial check of file structure
+	if header[0] != "Power station" || header[1] != "# Units" {
+		panic("non-conforming files structure")
 	}
 
 	for {

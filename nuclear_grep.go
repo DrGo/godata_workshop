@@ -7,9 +7,11 @@ package main
 //    ./nuclear_grep --country=China --units=7
 //
 // The above invocation of the script will print to stdout all the
-// records for plants in China that have exactly 7 reactors.
+// records for plants in China that have exactly 7 reactors.  Only the
+// plants that are currently in-service are searched.
 //
-// See nuclear_count_russia.go for more information about the data.
+// See nuclear_count_russia.go for more information about preparing
+// the input data.
 
 import (
 	"encoding/csv"
@@ -45,7 +47,14 @@ func readFile() {
 	defer fid.Close()
 
 	rdr := csv.NewReader(fid)
-	first := true
+
+	// Assume the header can be read
+	header, _ := rdr.Read()
+
+	// Partial check of file structure
+	if header[0] != "Power station" || header[1] != "# Units" || header[3] != "Country" {
+		panic("non-conforming files structure")
+	}
 
 	for {
 		// Get the next line
@@ -55,12 +64,6 @@ func readFile() {
 		}
 		if err != nil {
 			panic(err)
-		}
-
-		// Skip the header
-		if first {
-			first = false
-			continue
 		}
 
 		// Check the country name if needed
