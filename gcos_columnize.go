@@ -80,16 +80,21 @@ var (
 	// simultaneously open files.
 	year_buf map[int]*bytes.Buffer
 
-	// We don't know up-front which years are in the data set, so
-	// we create data structures as we first encounter each year.
-	// seen tells us whether we are seeing a year for the first
-	// time and therefore need to set things up.
-	seen map[int]bool
+	// Safely send results from goroutines back to parent
+	rec_chan chan rec_t
+
+	// Semaphore, used to limit the number of input files being
+	// processed simultaneously (since a limited number of files
+	// can be open at the same time).
+	sem chan bool
+
+	// The number of input files that can be simultaneously processed
+	sem_size int = 50
 
 	// Used to manage concurrency
 	wg sync.WaitGroup
 
-	// Number of bytes to save in-memory before flushing to disk
+	// Number of bytes per year to save in-memory before flushing to disk
 	buf_size int = 1e7
 )
 
@@ -157,8 +162,6 @@ func setupYear(year int) {
 	if err != nil {
 		panic(err)
 	}
-
-	seen[year] = true
 }
 
 // parse processes one row of data from a raw input file (i.e. data
@@ -174,11 +177,6 @@ func parse(line string) {
 	year, err := strconv.Atoi(line[11:15])
 	if err != nil {
 		panic(err)
-	}
-
-	// If we have not seen this year before, need to set up.
-	if !seen[year] {
-		setupYear(year)
 	}
 
 	// The month for the data value
@@ -213,17 +211,17 @@ func parse(line string) {
 
 		day := (pos-21)/8 + 1
 		r := rec_t{Id: id, Year: year, Month: month, Day: day, Value: v}
-		year_gob[year].Encode(r)
-
-		// If the buffer is full, flush it
-		if year_buf[year].Len() > buf_size {
-			flush(year)
-		}
+		rec_chan <- r
 	}
 }
 
 // processFile handles all processing for one data file (for one station).
 func processFile(file os.FileInfo) {
+
+	defer func() {
+		<-sem
+		wg.Done()
+	}()
 
 	fmt.Printf("Reading %v\n", file.Name())
 
@@ -283,12 +281,13 @@ func flush(year int) {
 	year_buf[year].Truncate(0)
 }
 
-// step1 processes the raw data into native go data structures.
-func step1() {
+// processRaw processes the raw data into native go data structures.
+func processRaw() {
 
 	year_buf = make(map[int]*bytes.Buffer)
 	year_gob = make(map[int]*gob.Encoder)
-	seen = make(map[int]bool)
+	rec_chan = make(chan rec_t)
+	sem = make(chan bool, sem_size)
 
 	// Reset the output directory
 	err := os.RemoveAll(out_path)
@@ -300,6 +299,10 @@ func step1() {
 		panic(err)
 	}
 
+	for year := 1833; year <= 2016; year++ {
+		setupYear(year)
+	}
+
 	// Get a list of the input data file names
 	files, err := ioutil.ReadDir(data_path)
 	if err != nil {
@@ -307,8 +310,39 @@ func step1() {
 	}
 
 	// Process each file
-	for _, file := range files {
-		processFile(file)
+	go func() {
+		for _, file := range files {
+			wg.Add(1)
+
+			// We will only be able to put sem_size true's
+			// into the semaphore channel at once.  When a
+			// call to processFile completes, we remove
+			// one value from sem so that this loop can
+			// proceed to the next file.
+			sem <- true
+
+			go processFile(file)
+		}
+		wg.Wait()
+
+		// Close the channel to signal that we can stop reading.
+		close(rec_chan)
+	}()
+
+	// Read until the channel is closed
+	for r := range rec_chan {
+		year := r.Year
+		if year_gob[year] == nil {
+			fmt.Printf("%v\n", year)
+			panic("")
+		}
+		err = year_gob[year].Encode(r)
+		if err != nil {
+			panic(err)
+		}
+		if year_buf[year].Len() > buf_size {
+			flush(year)
+		}
 	}
 
 	// Write whatever is left to disk
@@ -410,6 +444,6 @@ func recsort() {
 }
 
 func main() {
-	step1()
+	processRaw()
 	recsort()
 }
