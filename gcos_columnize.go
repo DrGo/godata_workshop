@@ -332,10 +332,14 @@ func processRaw() {
 	// Read until the channel is closed
 	for r := range rec_chan {
 		year := r.Year
+
+		// Since the setupYear range is based on fixed values
+		// we need to be ready if new years arise.
 		if year_gob[year] == nil {
-			fmt.Printf("%v\n", year)
-			panic("")
+			msg := fmt.Sprintf("Year %d not set up properly.\n", year)
+			panic(msg)
 		}
+
 		err = year_gob[year].Encode(r)
 		if err != nil {
 			panic(err)

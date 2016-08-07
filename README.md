@@ -39,8 +39,8 @@ Essential concepts
 
     * Binary data containers [Apache
       Arrow](https://github.com/apache/arrow) and
-      [Feather](https://github.com/wesm/feather) -- won't be ready for
-      August 2016 offering
+      [Feather](https://github.com/wesm/feather) -- won't be covered in
+      August 2016 offering of the workshop
 
 * Basic concurrency
 
