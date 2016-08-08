@@ -78,6 +78,6 @@ be used for more specialized data processing:
 
 * [gogeo](https://github.com/paulmach/go.geo) -- a geometry/geography library
 
-* [https://github.com/spakin/awk](awk) -- Awk-like processing of text files
+* [awk](https://github.com/spakin/awk) -- Awk-like processing of text files
 
-* [https://github.com/biogo/biogo](biogo) -- A bioinformatics library
+* [biogo](https://github.com/biogo/biogo) -- A bioinformatics library
