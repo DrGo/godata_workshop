@@ -56,8 +56,28 @@ Index of examples
 
 * [nuclear_json.go](nuclear_json.go) (json and gob serialization, structs)
 
+* [streaming.go](streaming.go) (harvest Twitter streams)
+
 * [gcos_monthly.go](gcos_monthly.go)
 
 * [gcos_monthly_concurrent.go](gcos_monthly_concurrent.go)
 
 * [gcos_columnize.go](gcos_columnize.go) (concurrency, serialization, binary data, file system manipulations)
+
+
+Go libraries for data processing
+--------------------------------
+
+This workshop is primarily about writing programs to manipulate data
+using the core Go language.  There are also some Go libraries that can
+be used for more specialized data processing:
+
+* [https://github.com/gonum](gonum) -- a collection of numerical libraries
+
+* [https://github.com/dghubble/go-twitter](go-twitter) -- a library for accessing the Twitter API
+
+* [https://github.com/paulmach/go.geo](go.geo) -- a geometry/geography library
+
+* [https://github.com/spakin/awk](awk) -- Awk-like processing of text files
+
+* [https://github.com/biogo/biogo](biogo) -- A bioinformatics library

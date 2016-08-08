@@ -430,6 +430,7 @@ func recsort() {
 	// Reset since we may have used it already in step 1
 	wg = sync.WaitGroup{}
 
+	// This is "embarrassingly simple" parallelism
 	for _, di := range dirs {
 		if !di.IsDir() {
 			continue
