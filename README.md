@@ -72,11 +72,11 @@ This workshop is primarily about writing programs to manipulate data
 using the core Go language.  There are also some Go libraries that can
 be used for more specialized data processing:
 
-* [https://github.com/gonum](gonum) -- a collection of numerical libraries
+* [gonum](https://github.com/gonum) -- a collection of numerical libraries
 
-* [https://github.com/dghubble/go-twitter](go-twitter) -- a library for accessing the Twitter API
+* [go-twitter](https://github.com/dghubble/go-twitter) -- a library for accessing the Twitter API
 
-* [https://github.com/paulmach/go.geo](go.geo) -- a geometry/geography library
+* [gogeo](https://github.com/paulmach/go.geo) -- a geometry/geography library
 
 * [https://github.com/spakin/awk](awk) -- Awk-like processing of text files
 
