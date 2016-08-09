@@ -62,9 +62,9 @@ Index of examples
 
 * [notable.go](notable.go) (geodesic distance calculations, quantile calculations)
 
-* [gcos_monthly.go](gcos_monthly.go)
+* [gcos_monthly.go](gcos_monthly.go) (numeric data aggregation)
 
-* [gcos_monthly_concurrent.go](gcos_monthly_concurrent.go)
+* [gcos_monthly_concurrent.go](gcos_monthly_concurrent.go) (concurrent data aggregation)
 
 * [gcos_columnize.go](gcos_columnize.go) (concurrency, serialization, binary data, file system manipulations)
 
