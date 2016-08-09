@@ -20,6 +20,14 @@ Go resources
 
 * The Go project [wiki](https://github.com/golang/go/wiki)
 
+* Rob Pike Go talks: [Another Golang at language
+design](https://www.youtube.com/watch?v=uQgWP7zM6mU), [Simplicity is
+complicated](https://www.youtube.com/watch?v=rFejpH_tAHM), [Go
+concurrency patterns](https://www.youtube.com/watch?v=f6kdp27TYZs),
+[Go proverbs](https://www.youtube.com/watch?v=PAAkCSZUG1c),
+[Concurrency is not
+parallelism](https://www.youtube.com/watch?v=B9lP-E4J_lc)
+
 Essential concepts
 ------------------
 
@@ -80,7 +88,7 @@ be used for more specialized data processing:
 
 * [go-twitter](https://github.com/dghubble/go-twitter) -- a library for accessing the Twitter API
 
-* [gogeo](https://github.com/paulmach/go.geo) -- a geometry/geography library
+* [go.geo](https://github.com/paulmach/go.geo) -- a geometry/geography library
 
 * [awk](https://github.com/spakin/awk) -- Awk-like processing of text files
 
