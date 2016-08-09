@@ -58,6 +58,10 @@ Index of examples
 
 * [streaming.go](streaming.go) (harvest Twitter streams)
 
+* [freebase_convert.go](freebase_convert.go) (convert from Exel to CSV)
+
+* [notable.go](notable.go) (geodesic distance calculations, quantile calculations)
+
 * [gcos_monthly.go](gcos_monthly.go)
 
 * [gcos_monthly_concurrent.go](gcos_monthly_concurrent.go)
@@ -80,4 +84,10 @@ be used for more specialized data processing:
 
 * [awk](https://github.com/spakin/awk) -- Awk-like processing of text files
 
+* [xlsx](https://github.com/tealeg/xlsx) -- Read Excel files
+
 * [biogo](https://github.com/biogo/biogo) -- A bioinformatics library
+
+* [datareader](https://github.com/kshedden/datareader) -- Read Stata and SAS7BDAT files
+
+* [ziparray](https://github.com/kshedden/ziparray) -- Binary serialization utilities
