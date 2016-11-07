@@ -20,7 +20,7 @@ Go resources
 
 * The Go project [wiki](https://github.com/golang/go/wiki)
 
-* Rob Pike Go talks: [Another Golang at language
+* Rob Pike Go talks on youtube: [Another Golang at language
 design](https://www.youtube.com/watch?v=uQgWP7zM6mU), [Simplicity is
 complicated](https://www.youtube.com/watch?v=rFejpH_tAHM), [Go
 concurrency patterns](https://www.youtube.com/watch?v=f6kdp27TYZs),
@@ -30,6 +30,8 @@ parallelism](https://www.youtube.com/watch?v=B9lP-E4J_lc)
 
 Essential concepts
 ------------------
+
+* [Installation and configuration of the Go tools](install.md)
 
 * Basic Go language
 
@@ -86,6 +88,8 @@ be used for more specialized data processing:
 
 * [gonum](https://github.com/gonum) -- a collection of numerical libraries
 
+* [goleveldb](https://github.com/syndtr/goleveldb) -- a leveldb implementation for Go
+
 * [go-twitter](https://github.com/dghubble/go-twitter) -- a library for accessing the Twitter API
 
 * [go.geo](https://github.com/paulmach/go.geo) -- a geometry/geography library
@@ -97,5 +101,3 @@ be used for more specialized data processing:
 * [biogo](https://github.com/biogo/biogo) -- A bioinformatics library
 
 * [datareader](https://github.com/kshedden/datareader) -- Read Stata and SAS7BDAT files
-
-* [ziparray](https://github.com/kshedden/ziparray) -- Binary serialization utilities
