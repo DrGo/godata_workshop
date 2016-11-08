@@ -37,7 +37,7 @@ Essential concepts
 
 * Go tools
 
-* Native Go data structures: slices, maps, structs
+* Native Go data structures: [slices, maps, structs](datastructs.go)
 
 * Data input and output
 
