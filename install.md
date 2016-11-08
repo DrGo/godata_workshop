@@ -22,8 +22,9 @@ export GOPATH="${HOME}/go_projects"
 Your own machine
 ----------------
 
-* Download the latest version [here](https://golang.org/dl) and read
-  the [installation instructions](https://golang.org/doc/install)
+* Download the latest version ofthe Go tools
+  [here](https://golang.org/dl) and read the [installation
+  instructions](https://golang.org/doc/install)
 
 
 Goimports utility and editor configuration (optional)
@@ -34,7 +35,7 @@ Goimports utility and editor configuration (optional)
 
 * Emacs configuration:
 
-    * Create a directory, e.g. `/home/uniqname/emacs`
+    * Create a directory for your emacs modules, e.g. `/home/uniqname/emacs`
 
     * Change to the directory that you just created and run:
 
@@ -51,6 +52,8 @@ Goimports utility and editor configuration (optional)
     ```
     (add-to-list 'load-path "/home/uniqname/emacs")
     (require 'go-mode-autoloads)
+    (setq gofmt-command "/home/uniqname/go_projects/bin/goimports")
+    (add-hook 'before-save-hook 'gofmt-before-save)
     ```
 
 * See the [goimports

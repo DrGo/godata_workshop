@@ -33,7 +33,7 @@ Essential concepts
 
 * [Installation and configuration of the Go tools](install.md)
 
-* Basic Go language
+* [Basic Go language and a very simple example](simple.md)
 
 * Go tools
 
