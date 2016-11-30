@@ -2,7 +2,7 @@ package main
 
 // This script takes three csv files containing data about nuclear
 // power plants, stores the data for each plant as a struct, then
-// writes the structs to fies in json and gob formats.
+// writes the structs to files in json and gob formats.
 //
 // Missing values are indicated with the zero type fo the
 // corresponding type, which means a 0 for numeric variables.
