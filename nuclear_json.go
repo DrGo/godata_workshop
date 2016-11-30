@@ -4,8 +4,8 @@ package main
 // power plants, stores the data for each plant as a struct, then
 // writes the structs to files in json and gob formats.
 //
-// Missing values are indicated with the zero type fo the
-// corresponding type, which means a 0 for numeric variables.
+// Missing values are represented with the zero value for the
+// corresponding type (which is a 0 for numeric variables).
 //
 // See nuclear_count_russia.go for more information about the data.
 
@@ -118,9 +118,9 @@ func processLocation(raw string) geopoint {
 	return geopoint{Latitude: nfields[0], Longitude: nfields[1]}
 }
 
-// findColumn returns a map from a column name to its numeric position
+// columnMap returns a map from a column name to its numeric position
 // in the file.
-func findColumn(header []string) map[string]int {
+func columnMap(header []string) map[string]int {
 	colix := make(map[string]int)
 	for i, v := range header {
 		colix[v] = i
@@ -151,7 +151,7 @@ func processFile(fname string) {
 		}
 	}
 
-	colix := findColumn(header)
+	colix := columnMap(header)
 
 	for {
 		// Get the next line

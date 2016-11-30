@@ -1,9 +1,13 @@
-Go has two built-in data structures that are used in most Go programs.
+Built-in data structures in Go
+==============================
+
+Go has two built-in data structures, *arrays* and *maps*, that are
+used in most Go programs.
 
 Arrays and slices
 -----------------
 
-A *slice* is the native Go data structure for homogeneous sequential
+A slice is the native Go data structure for homogeneous sequential
 data.  A slice is backed by a data structure called an *array*, but in
 practice nearly everything is a slice, so that is the main focus here.
 
@@ -22,7 +26,7 @@ Go supports slicing and element access with the bracket `[ ]` syntax:
 ```
 x := []int{1, 3, 5, 7, 9}
 
-y := x[1:3] // a slice of ints sharing an aray with x
+y := x[1:3] // a slice of ints with value []int{3, 5} that shares memory with x
 
 z := x[1]   // an int
 ```
