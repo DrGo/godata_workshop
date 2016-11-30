@@ -32,6 +32,9 @@ var (
 
 	// Number of reactor units
 	num_units int
+
+	// The primary data source
+	datafile string = "in_service.csv"
 )
 
 // readFile reads a CSV file and prints to stdout the lines that
@@ -39,8 +42,7 @@ var (
 func readFile() {
 
 	// Open the file, panic on error, don't forget to close
-	fname := "in_service.csv"
-	fid, err := os.Open(fname)
+	fid, err := os.Open(datafile)
 	if err != nil {
 		panic(err)
 	}
@@ -72,7 +74,7 @@ func readFile() {
 		}
 
 		// Check the site name if needed
-		if site_name != "" && record[0] != site_name {
+		if site_name != "" && !strings.Contains(record[0], site_name) {
 			continue
 		}
 
