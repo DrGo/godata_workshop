@@ -85,7 +85,7 @@ func parse(line string) *lrec_t {
 	for pos := 21; pos < len(line); pos += 8 {
 
 		// First check the quality flag
-		if line[26] != ' ' {
+		if line[pos+6] != ' ' {
 			rec.Values = append(rec.Values, 0)
 			rec.IsValid = append(rec.IsValid, false)
 			continue
